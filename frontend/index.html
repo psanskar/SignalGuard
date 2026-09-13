@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SignalGuard job scam risk assessment">
+  <title>SignalGuard — Job Scam Detection</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="page-container header-inner">
+      <button class="brand-button" id="brandButton" type="button" aria-label="Back to SignalGuard analysis">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img">
+            <path d="M12 3.25 19 6.2v5.1c0 4.7-3 8-7 9.45-4-1.45-7-4.75-7-9.45V6.2L12 3.25Z"/>
+            <path d="m8.8 12.15 2.1 2.1 4.4-4.45"/>
+          </svg>
+        </span>
+        <span class="brand-name">SignalGuard</span>
+      </button>
+
+      <div class="ready-pill" aria-label="Analyzer status">
+        <span class="ready-dot" aria-hidden="true"></span>
+        <span>Analyzer ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <!-- ANALYZE -->
+    <section id="analyzeView" class="view">
+      <div class="analyze-page">
+        <div class="hero-block">
+          <div class="eyebrow">JOB SCAM DETECTION</div>
+          <h1>Check a job before you apply.</h1>
+          <p class="hero-copy centered">
+            Analyze a job posting for fraud signals, warning signs, and supporting safety evidence.
+          </p>
+        </div>
+
+        <div class="analyzer-card analyzer-card-home">
+          <div class="segmented-control" role="tablist" aria-label="Analysis mode">
+            <button id="urlTab" class="segment active" type="button" role="tab" aria-selected="true">Job URL</button>
+            <button id="manualTab" class="segment" type="button" role="tab" aria-selected="false">Paste details</button>
+          </div>
+
+          <div id="urlPanel" class="analysis-panel home-panel" role="tabpanel">
+            <div class="field">
+              <label for="jobUrl">Job posting URL</label>
+              <div class="input-with-icon">
+                <span class="input-icon" aria-hidden="true">↗</span>
+                <input
+                  id="jobUrl"
+                  type="url"
+                  inputmode="url"
+                  autocomplete="url"
+                  placeholder="https://www.linkedin.com/jobs/view/..."
+                  aria-describedby="urlHelper urlError"
+                >
+              </div>
+              <div id="urlHelper" class="field-helper">
+                <span class="info-icon" aria-hidden="true">i</span>
+                <span>Paste a publicly accessible job posting URL.</span>
+              </div>
+              <p id="urlError" class="field-error hidden" role="alert"></p>
+            </div>
+
+            <button id="analyzeUrlButton" class="primary-button" type="button">
+              <span>Analyze Job</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </button>
+
+            <div class="helper-actions">
+              <button type="button" class="text-action" id="tryUrlExample">Try an example</button>
+              <span aria-hidden="true">·</span>
+              <button type="button" class="text-action" id="switchToManual">Paste details instead</button>
+            </div>
+          </div>
+
+          <div id="manualPanel" class="analysis-panel hidden" role="tabpanel">
+            <form id="jobForm" novalidate>
+              <div class="manual-grid">
+                <div class="field full">
+                  <label for="title">Job Title <span class="required">*</span></label>
+                  <input id="title" type="text" placeholder="e.g. Frontend Developer Intern" autocomplete="off">
+                </div>
+
+                <div class="field full">
+                  <label for="company_profile">Company Profile</label>
+                  <textarea id="company_profile" rows="3" placeholder="Brief company information"></textarea>
+                </div>
+
+                <div class="field full">
+                  <label for="description">Job Description <span class="required">*</span></label>
+                  <textarea id="description" rows="7" placeholder="Paste the full job description"></textarea>
+                </div>
+
+                <div class="field half">
+                  <label for="requirements">Requirements</label>
+                  <textarea id="requirements" rows="4" placeholder="Skills, experience, qualifications"></textarea>
+                </div>
+
+                <div class="field half">
+                  <label for="benefits">Benefits</label>
+                  <textarea id="benefits" rows="4" placeholder="Benefits, compensation, flexibility"></textarea>
+                </div>
+              </div>
+
+              <p id="manualError" class="field-error hidden" role="alert"></p>
+
+              <button id="analyzeButton" class="primary-button" type="submit">
+                <span>Analyze Job</span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </button>
+            </form>
+          </div>
+
+          <div id="loadingInline" class="loading-inline hidden" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>The job posting is being analyzed…</span>
+          </div>
+        </div>
+
+        <section class="capability-section" aria-label="SignalGuard capabilities">
+          <div class="capability-grid">
+            <article class="capability-card">
+              <div class="capability-icon" aria-hidden="true">ML</div>
+              <div>
+                <h2>ML MODEL</h2>
+                <p>Estimates fraud probability from posting signals.</p>
+              </div>
+            </article>
+
+            <article class="capability-card">
+              <div class="capability-icon" aria-hidden="true">R</div>
+              <div>
+                <h2>RULE-BASED CHECKS</h2>
+                <p>Identifies known scam patterns and warning signs.</p>
+              </div>
+            </article>
+
+            <article class="capability-card">
+              <div class="capability-icon" aria-hidden="true">K</div>
+              <div>
+                <h2>SAFETY KNOWLEDGE</h2>
+                <p>Provides relevant job-safety guidance for detected signals.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <p class="homepage-note">
+          SignalGuard provides a risk assessment based on available posting information. Results are not proof that a job is fraudulent or legitimate.
+        </p>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="resultsView" class="view hidden">
+      <div class="results-toolbar">
+        <button id="backButton" class="back-button" type="button">
+          <span aria-hidden="true">←</span>
+          <span>Back to analysis</span>
+        </button>
+
+        <div class="result-meta">
+          <span class="section-kicker">ANALYSIS RESULT</span>
+          <span id="sourceMeta" class="source-meta hidden"></span>
+        </div>
+      </div>
+
+      <section id="assessmentCard" class="assessment-card">
+
+        <div class="assessment-main">
+
+          <div class="section-kicker">
+            OVERALL SIGNALGUARD ASSESSMENT
+          </div>
+
+          <div class="assessment-title-row">
+            <span id="riskBadge" class="risk-badge">—</span>
+
+            <span id="warningCount" class="warning-count">
+              0 warning signs detected
+            </span>
+          </div>
+
+          <h1 id="assessmentHeadline">
+            Assessment unavailable
+          </h1>
+
+          <p id="assessmentText">
+            No assessment is currently available.
+          </p>
+
+        </div>
+
+        <div class="model-card">
+
+          <div class="model-card-top">
+            <div>
+              <div class="section-kicker">
+                ML MODEL ASSESSMENT
+              </div>
+
+              <div class="model-subtitle">
+                Classifier output
+              </div>
+            </div>
+
+            <span id="threshold" class="mono-small">
+              Threshold: —
+            </span>
+          </div>
+
+          <div class="probability-row">
+            <span>Fraud probability</span>
+
+            <strong id="fraudProbability">
+              —
+            </strong>
+          </div>
+
+          <div class="classification-row">
+            <span>Model classification</span>
+
+            <span
+              id="mlClassification"
+              class="classification-badge"
+            >
+              —
+            </span>
+          </div>
+
+          <div class="probability-track" aria-hidden="true">
+            <div
+              id="probabilityFill"
+              class="probability-fill"
+            ></div>
+          </div>
+
+          <p class="model-note">
+            The ML model estimates fraud probability from
+            signals in the available job posting.
+          </p>
+
+        </div>
+
+      </section>
+
+      <section class="summary-card card">
+        <div class="summary-icon" aria-hidden="true">!</div>
+        <p id="summary">No summary available.</p>
+      </section>
+
+      <section class="result-section">
+        <div class="section-heading-row">
+          <div>
+            <div class="section-kicker">DETECTED WARNING SIGNS</div>
+            <h2>Detected warning signs</h2>
+          </div>
+          <span id="warningCountBadge" class="count-badge">0 detected</span>
+        </div>
+
+        <div id="redFlags" class="warning-grid"></div>
+      </section>
+
+      <section class="result-columns">
+        <div class="card result-panel">
+          <div class="panel-heading">
+            <div>
+              <div class="section-kicker">MODEL EXPLANATION</div>
+              <h2>Why the model responded this way</h2>
+            </div>
+            <span class="panel-caption">SHAP signals</span>
+          </div>
+
+          <div class="signal-legend">
+  <span>
+    <span class="legend-dot fraud"></span>
+    Increases fraud risk
+  </span>
+
+  <span>
+    <span class="legend-dot legit"></span>
+    Supports legitimacy
+  </span>
+</div>
+
+          <div id="shapSignals" class="signal-list"></div>
+
+          <p class="panel-note">
+            SHAP signals show which features influenced the ML model toward
+            or away from a fraud prediction. They are not proof that a job is fraudulent.
+          </p>
+        </div>
+
+        <div class="card result-panel">
+          <div class="panel-heading">
+          <div>
+            <div class="section-kicker">SAFETY KNOWLEDGE</div>
+            <h2>Supporting safety guidance</h2>
+          </div>
+          <span class="panel-caption">Retrieved evidence</span>
+        </div>
+
+          <div id="ragResults" class="evidence-list"></div>
+
+          <p class="panel-note">
+            Retrieved guidance provides contextual job-safety information related
+            to the signals detected in this posting.
+          </p>
+        </div>
+      </section>
+
+      <section class="card explanation-card">
+        <div class="section-kicker">RISK EXPLANATION</div>
+        <p id="riskExplanation">No explanation available.</p>
+      </section>
+
+      <section class="card recommendations-card">
+        <div class="section-heading-row compact">
+          <div>
+            <div class="section-kicker">RECOMMENDED ACTIONS</div>
+            <h2>Recommended actions</h2>
+          </div>
+        </div>
+
+        <div id="recommendations" class="recommendation-grid"></div>
+      </section>
+
+      <section class="card posting-card">
+        <div class="section-heading-row compact">
+          <div>
+            <div class="section-kicker">JOB POSTING</div>
+            <h2>Analyzed posting</h2>
+          </div>
+          <span id="postingSource" class="panel-caption"></span>
+        </div>
+
+        <div id="postingPreview" class="posting-preview">
+          <div class="posting-empty">No posting preview available.</div>
+        </div>
+      </section>
+
+      <section class="assessment-note">
+        <p id="confidenceNote">
+          SignalGuard provides a risk assessment based on available posting information.
+          Results are not proof that a job is fraudulent or legitimate.
+        </p>
+      </section>
+    </section>
+
+
+    <!-- ERROR -->
+    <section id="errorView" class="view hidden">
+      <div class="standalone-state">
+        <div class="state-icon error" aria-hidden="true">!</div>
+        <div class="section-kicker">ANALYSIS ERROR</div>
+        <h1>Analysis unavailable</h1>
+        <p id="errorMessage">The analysis could not be completed. Please try again.</p>
+        <button id="retryButton" class="primary-button compact" type="button">Try Again</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const tryUrlExample = document.getElementById("tryUrlExample");
+      const switchToManual = document.getElementById("switchToManual");
+
+      if (tryUrlExample) {
+        tryUrlExample.addEventListener("click", function () {
+          const field = document.getElementById("jobUrl");
+          if (field) {
+            field.value = "https://www.linkedin.com/jobs/view/3928172918-operations-assistant";
+            field.focus();
+          }
+        });
+      }
+
+      if (switchToManual) {
+        switchToManual.addEventListener("click", function () {
+          const manualTab = document.getElementById("manualTab");
+          if (manualTab) manualTab.click();
+        });
+      }
+    })();
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
