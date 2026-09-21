@@ -192,7 +192,7 @@ A fallback explanation is used when the LLM service is unavailable.
 
 ## Model Performance
 
-The final model was evaluated using a separate train / validation / test workflow.
+The final model was evaluated using a stratified train / test split.
 
 | Accuracy  | 98.57% |
 | Precision | 90.67% |
