@@ -194,14 +194,12 @@ A fallback explanation is used when the LLM service is unavailable.
 
 The final model was evaluated using a separate train / validation / test workflow.
 
-| Metric    |  Result |
-| --------- | ------: |
-| Accuracy  | ~98.55% |
-| Precision | ~92.91% |
-| Recall    | ~75.72% |
-| F1-score  | ~83.44% |
-| ROC-AUC   | ~98.45% |
-| PR-AUC    | ~90.72% |
+| Accuracy  | 98.57% |
+| Precision | 90.67% |
+| Recall    | 78.61% |
+| F1-score  | 84.21% |
+| ROC-AUC   | 98.63% |
+| PR-AUC    | 91.71% |
 
 The dataset contains:
 
