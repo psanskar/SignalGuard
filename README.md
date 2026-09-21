@@ -251,8 +251,6 @@ SignalGuard/
 │   └── app.py
 │
 ├── data/
-│   ├── raw/
-│   │   └── fake_job_postings.csv
 │   └── processed/
 │
 ├── detector/
