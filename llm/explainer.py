@@ -1,20 +1,52 @@
-from llm.llm_client import LLMClient, LLMUnavailableError
+import os
+
 from llm.prompt_builder import PromptBuilder
 
 
 class LLMExplainer:
 
     def __init__(self):
-
-        self.client = LLMClient()
         self.prompt_builder = PromptBuilder()
 
+        self.light_mode = os.getenv(
+            "SIGNALGUARD_LIGHT_MODE",
+            "0"
+        ).lower() in {"1", "true", "yes"}
+
+        self.client = None
+
+        if not self.light_mode:
+            try:
+                from llm.llm_client import (
+                    LLMClient,
+                    LLMUnavailableError
+                )
+
+                self.client = LLMClient()
+                self._llm_unavailable_error = LLMUnavailableError
+
+            except Exception as error:
+                print(
+                    f"Gemini disabled: {error}"
+                )
+
+                self.client = None
+                self._llm_unavailable_error = Exception
+        else:
+            print(
+                "Lightweight mode enabled; using local explanation fallback."
+            )
+
     def explain(self, risk_result):
+
+        if self.light_mode or self.client is None:
+            return self._build_fallback_report(
+                risk_result
+            )
 
         prompt = self.prompt_builder.build(risk_result)
 
         try:
-
             response = self.client.generate_json(prompt)
 
             required_fields = [
@@ -26,7 +58,6 @@ class LLMExplainer:
             ]
 
             for field in required_fields:
-
                 if field not in response:
                     raise ValueError(
                         f"LLM response missing required field: {field}"
@@ -36,13 +67,23 @@ class LLMExplainer:
 
             return response
 
-        except LLMUnavailableError as error:
-
+        except self._llm_unavailable_error as error:
             print(
                 f"LLM temporarily unavailable: {error}"
             )
 
-            return self._build_fallback_report(risk_result)
+            return self._build_fallback_report(
+                risk_result
+            )
+
+        except Exception as error:
+            print(
+                f"LLM explanation error: {error}"
+            )
+
+            return self._build_fallback_report(
+                risk_result
+            )
 
     def _build_fallback_report(self, risk_result):
 
@@ -76,11 +117,9 @@ class LLMExplainer:
             []
         )
 
-        # Build concerns from detected red flags.
         key_concerns = []
 
         for flag in red_flags:
-
             category = flag.get(
                 "category",
                 "unknown"
@@ -95,9 +134,7 @@ class LLMExplainer:
                 f"{category}: {message}"
             )
 
-        # Add important SHAP signals.
         for signal in shap_signals[:3]:
-
             feature = signal.get(
                 "feature",
                 ""
@@ -109,14 +146,12 @@ class LLMExplainer:
             )
 
             if feature:
-
                 key_concerns.append(
                     f"Model signal: '{feature}' "
                     f"contributed toward {direction}."
                 )
 
         if not key_concerns:
-
             key_concerns.append(
                 "No specific red flags were detected "
                 "by the configured rule-based detector."
@@ -128,15 +163,21 @@ class LLMExplainer:
             else "not classified as fraudulent"
         )
 
+        explanation_source = (
+            "the local SignalGuard explanation fallback"
+            if self.light_mode
+            else "the available SignalGuard evidence"
+        )
+
         return {
-            "status": "unavailable",
+            "status": "local_fallback" if self.light_mode else "unavailable",
 
             "summary": (
                 f"SignalGuard assigned an overall {risk_level} risk level. "
                 f"The ML model estimated a fraud probability of "
                 f"{fraud_probability:.2f} and classified the job as "
-                f"{classification}. The natural-language LLM explanation "
-                f"is temporarily unavailable."
+                f"{classification}. The explanation was generated using "
+                f"{explanation_source}."
             ),
 
             "risk_explanation": (
@@ -153,10 +194,8 @@ class LLMExplainer:
             "safety_recommendations": recommendations,
 
             "confidence_note": (
-                "The LLM explanation service was temporarily "
-                "unavailable. This assessment is based on the "
-                "SignalGuard ML model and supporting detection "
-                "signals and should not be treated as absolute "
-                "proof of fraud."
+                "This assessment is based on the SignalGuard ML model "
+                "and supporting detection signals. It is not absolute "
+                "proof that a job is fraudulent or legitimate."
             )
         }
