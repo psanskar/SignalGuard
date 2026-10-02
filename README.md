@@ -295,6 +295,37 @@ SignalGuard/
 
 ---
 
+## Partner / Quick Start
+
+If you are running SignalGuard on a Windows laptop for project work, use the lightweight partner mode. It does not require a Gemini API key, PyTorch, or Sentence Transformers.
+
+### First run
+
+1. Clone the repository:
+   ```powershell
+   git clone https://github.com/psanskar/SignalGuard.git
+   ```
+2. Open the cloned `SignalGuard` folder in File Explorer.
+3. Double-click `start_partner.bat`.
+
+The script automatically:
+- creates a local Python virtual environment;
+- installs the smaller partner dependency set;
+- enables lightweight TF-IDF safety retrieval;
+- uses the built-in local explanation fallback instead of Gemini;
+- starts both the backend and frontend;
+- opens SignalGuard in the browser.
+
+Open manually if needed:
+
+```
+http://127.0.0.1:5500/
+```
+
+Keep the two command windows open while using the application. Close them to stop SignalGuard.
+
+The full `requirements.txt` installation remains available for development when the semantic Sentence Transformer RAG and Gemini explanation features are required.
+
 ## Installation
 
 ### 1. Clone the repository
